@@ -38,3 +38,18 @@ body {
     border-radius: 65px;
     padding: 5px;
 }
+.display{
+    width: 350px;
+    height: 100px;
+    background-color: #d8a8eb;
+    border-radius: 30px;
+    text-align: right;
+    align-content: center;
+    color: aliceblue;
+    font-size: 4.5rem;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    padding-right: 5px;
+    border: 5px solid #a7598e;
+    box-shadow: 2px 2px 6px #ffffff99,
+        inset 7px 7px 6px #0000001a;
+}
