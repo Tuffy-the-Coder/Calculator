@@ -55,7 +55,7 @@ document.body.addEventListener("keydown", (e) => {
 
 let num1 = "";
 let num2 = "";
-const operations = ["÷", "-", "×", "+","*","/"];
+const operations = ["÷", "-", "×", "+","*","/","="];
 const numbers = [1,2,3,4,5,6,7,8,9,0]
 let display = document.querySelector(".display");
 let currentOperation;
@@ -106,14 +106,17 @@ document.querySelectorAll(".operator").forEach((operator) => {
     })
 })
 document.body.addEventListener("keydown", (e) => {
-    if (operations.some(op => op == e.key) || e.key == "Backspace") {
+    if (operations.some(op => op == e.key) || e.key == "Backspace" || e.key == "Enter") {
         displayOperator(e,e.key);    
     }
     
 })
-
 const displayOperator = (e,id) => {
     if (display.innerText.length !== 0) {
+        if ((display.innerText.length >= 9) && !["Backspace","backspace","clear","=","equals-to"].includes(id)) {
+            alert("max value exceed");
+            return;
+        }
         let hasOperator = operations.some(op => display.innerText.slice(1).includes(op)); // to avoid dublicate operators aside from negatibve value
         if (!hasOperator) {
             if (id == "add" || id == "+") {
@@ -145,6 +148,9 @@ const displayOperator = (e,id) => {
         }
         if ( id == "backspace" || id == "Backspace") {
             display.innerText = display.innerText.slice(0,-1);
+            hasOperator ? num2 = num2.slice(0,-1) : num1 = num1.slice(0,-1);
+            // console.log("n1 "+num1,"n2 "+num2); //   debugging console
+
         }
         else if (id == "x-squared") {
             currentOperation = "x-squared";
@@ -155,5 +161,45 @@ const displayOperator = (e,id) => {
             num1 = "";
             num2 = "";
         }
+        else if ((id == "equals-to" || id == "=" || id == "Enter") && num2.length != 0) {
+            calculations(currentOperation);
+        }
     }
 }
+
+const calculations = (currentOperation) => {
+    let ans;
+    switch (currentOperation) {
+        case "add":
+            ans = Number(num1) + Number(num2);
+            break;
+        case "substract":
+            ans = Number(num1) - Number(num2);
+            break;
+        case "multiply":
+            ans = Number(num1) * Number(num2);
+            break;
+        case "divide":
+            ans = Number(num1) / Number(num2);
+            break;
+        case "x-squared":
+            ans = Number(num1) * Number(num1);
+            break;
+        default:
+            break;
+    }
+    if (ans >= 999999999) {
+        alert("max value exceed");
+    } else {
+        if (!Number.isInteger(ans)) {       // to check if ans is decimal or int
+            display.innerText = ans.toFixed(2);
+            num1 = ans.toFixed(2);
+        }else {
+            display.innerText = ans;
+            num1 = ans.toString();
+        }
+        // console.log(ans, typeof ans); // //  debugging console
+        num2 = "";
+    }
+}
+
