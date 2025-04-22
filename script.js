@@ -55,7 +55,7 @@ document.body.addEventListener("keydown", (e) => {
 
 let num1 = "";
 let num2 = "";
-const operations = ["÷", "-", "×", "+"];
+const operations = ["÷", "-", "×", "+","*","/"];
 const numbers = [1,2,3,4,5,6,7,8,9,0]
 let display = document.querySelector(".display");
 let currentOperation;
@@ -66,7 +66,9 @@ document.querySelectorAll(".digit").forEach((digit) => {
     })
 })
 document.body.addEventListener("keydown", (e) => {
-    displayDigit(e,e.key);
+    if (numbers.some(num => num == e.key)) {
+        displayDigit(e,e.key);
+    }
     // console.log(e.key); // debugging console
 })
 
@@ -94,7 +96,64 @@ const displayDigit = (e,digit) => {
                 num2 +=digit;
                 display.innerText += digit;
             }
+        }
+    }
+}
+document.querySelectorAll(".operator").forEach((operator) => {
+    operator.addEventListener("click", (e) => {
+        displayOperator(e,operator.id);
+        // console.log(operator.id); //  debugging console
+    })
+})
+document.body.addEventListener("keydown", (e) => {
+    if (operations.some(op => op == e.key) || e.key == "Backspace") {
+        displayOperator(e,e.key);    
+    }
+    
+})
+
+const displayOperator = (e,id) => {
+    if (display.innerText.length !== 0) {
+        let hasOperator = operations.some(op => display.innerText.slice(1).includes(op)); // to avoid dublicate operators aside from negatibve value
+        if (!hasOperator) {
+            if (id == "add" || id == "+") {
+                display.innerText += "+";
+                currentOperation = "add";
+            }
+            else if( id == "substract" || id == "-"){
+                display.innerText += "-";
+                currentOperation = "substract";
+            }
+            else if( id == "multiply" || id == "*") {
+                display.innerText += "×";
+                currentOperation = "multiply";
+            }
+            else if (id == "divide" || id == "/") {
+                display.innerText += "÷";
+                currentOperation = "divide";
+            }
+            else if ( id == "plus-minus") {
+                if (display.innerText[0] == "-") {
+                    display.innerText = display.innerText.slice(1);
+                    num1 = display.innerText;
+                } else {
+                    display.innerText = "-".concat(display.innerText);
+                    num1 = display.innerText;
+                }
+            }
             
+        }
+        if ( id == "backspace" || id == "Backspace") {
+            display.innerText = display.innerText.slice(0,-1);
+        }
+        else if (id == "x-squared") {
+            currentOperation = "x-squared";
+            calculations(currentOperation);
+        }
+        else if (id == "clear") {
+            display.innerText = "";
+            num1 = "";
+            num2 = "";
         }
     }
 }
