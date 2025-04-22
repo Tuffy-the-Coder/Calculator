@@ -1,20 +1,20 @@
 // Styling part
 
 let mouseUsed = false;
-let btn1Hover = false;
+let btn0 = document.createElement("button");
+btn0.style.position = "absolute";
+btn0.style.left = "-100%";
+btn0.setAttribute("tabindex", "-1")
+document.body.prepend(btn0);
 let buttons = document.querySelectorAll("button");
 
 // removes focus style to avoid two hover effects from mouse and tab 
 
 buttons.forEach((btn) => {
     btn.addEventListener("mouseover", () => {
-        document.querySelectorAll("button").forEach((e) => {
-            e.classList.remove("usingKeyboard");
-        })
+        btn.classList.remove("usingKeyboard");
         mouseUsed = true;
-        if (btn === buttons[0]) {
-            btn1Hover = true;
-        }
+        btn0.focus();
     })
 })
 
@@ -23,31 +23,41 @@ buttons.forEach((btn) => {
 document.body.addEventListener("mousemove", () => {
     buttons.forEach((el) => {
         el.style.pointerEvents = "";
-        el.addEventListener("mouseleave", () => {
-            if (el === buttons[0]) {
-                btn1Hover = false;
-            }
-        })
+    })
+})
+buttons.forEach((btn) => {
+    btn.addEventListener("mouseleave", () => {
+        btn0.focus();
     })
 })
 
 // adds focus style & removes active mouse hover
 document.body.addEventListener("keydown", (e) => {
+    if (e.key == "Tab" && document.activeElement == btn0) { 
+        e.preventDefault();
+        buttons[1].focus();
+    }
+    if (e.key !== "Tab" && e.key !== "Enter" && e.key !== "=" && e.key !== "Backspace") {
+        btn0.focus();
+    }
     buttons.forEach((el) => {
+        if (e.key != "Shift") {
+            el.style.pointerEvents = "none";
+        }       
         if (e.key == "Tab") {
             el.classList.add("usingKeyboard");
-            el.style.pointerEvents = "none";
+            
         }
 
     })
+    const ignoreKeys = ["Tab", "Enter", "Shift", "Escape","Backspace"];
+    if (!ignoreKeys.includes(e.key)) {
+        btn0.focus();
+        btn0Focus = true;
+    }
     if (mouseUsed) {
-        e.preventDefault(); // prevents deafult tab behaviour 
+        e.preventDefault();  // prevents deafult tab behaviour 
         mouseUsed = false;
-        if (btn1Hover) {
-            buttons[1].focus();
-        } else {
-            buttons[0].focus();
-        }
     }
 })
 
@@ -55,30 +65,30 @@ document.body.addEventListener("keydown", (e) => {
 
 let num1 = "";
 let num2 = "";
-const operations = ["÷", "-", "×", "+","*","/","="];
-const numbers = [1,2,3,4,5,6,7,8,9,0]
+const operations = ["÷", "-", "×", "+", "*", "/", "="];
+const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
 let display = document.querySelector(".display");
 let currentOperation;
 document.querySelectorAll(".digit").forEach((digit) => {
     digit.addEventListener("click", (e) => {
-        displayDigit(e,digit.innerText);
+        displayDigit(e, digit.innerText);
         // console.log(digit.innerText); // debugging console
     })
 })
 document.body.addEventListener("keydown", (e) => {
     if (numbers.some(num => num == e.key)) {
-        displayDigit(e,e.key);
+        displayDigit(e, e.key);
     }
     // console.log(e.key); // debugging console
 })
 
-const displayDigit = (e,digit) => {
+const displayDigit = (e, digit) => {
     if (display.innerText.length >= 9) {
         alert("max value exceed");
         return;
     } else {
         let hasOperator = operations.some(op => display.innerText.slice(1).includes(op)); // for placing value on num1 & num2
-        if(!hasOperator){
+        if (!hasOperator) {
             if (digit == ".") {
                 if (!num1.includes(".")) {  // to avoid dublicate . in num1
                     num1 += digit;
@@ -86,14 +96,14 @@ const displayDigit = (e,digit) => {
                 }
             } else {
                 num1 += digit;
-                display.innerText +=digit;
+                display.innerText += digit;
             }
         } else {
             if (!num2.includes(".")) {     // to avoid dublicate . in num2
-                num2 +=digit;
+                num2 += digit;
                 display.innerText += digit;
             } else {
-                num2 +=digit;
+                num2 += digit;
                 display.innerText += digit;
             }
         }
@@ -101,19 +111,20 @@ const displayDigit = (e,digit) => {
 }
 document.querySelectorAll(".operator").forEach((operator) => {
     operator.addEventListener("click", (e) => {
-        displayOperator(e,operator.id);
+        displayOperator(e, operator.id);
         // console.log(operator.id); //  debugging console
     })
 })
 document.body.addEventListener("keydown", (e) => {
     if (operations.some(op => op == e.key) || e.key == "Backspace" || e.key == "Enter") {
-        displayOperator(e,e.key);    
+        // console.log(e.key) // debugging console
+        displayOperator(e, e.key);
     }
-    
+
 })
-const displayOperator = (e,id) => {
+const displayOperator = (e, id) => {
     if (display.innerText.length !== 0) {
-        if ((display.innerText.length >= 9) && !["Backspace","backspace","clear","=","equals-to"].includes(id)) {
+        if ((display.innerText.length >= 9) && !["Backspace", "backspace", "clear", "=", "equals-to"].includes(id)) {
             alert("max value exceed");
             return;
         }
@@ -123,11 +134,11 @@ const displayOperator = (e,id) => {
                 display.innerText += "+";
                 currentOperation = "add";
             }
-            else if( id == "substract" || id == "-"){
+            else if (id == "substract" || id == "-") {
                 display.innerText += "-";
                 currentOperation = "substract";
             }
-            else if( id == "multiply" || id == "*") {
+            else if (id == "multiply" || id == "*") {
                 display.innerText += "×";
                 currentOperation = "multiply";
             }
@@ -135,7 +146,7 @@ const displayOperator = (e,id) => {
                 display.innerText += "÷";
                 currentOperation = "divide";
             }
-            else if ( id == "plus-minus") {
+            else if (id == "plus-minus") {
                 if (display.innerText[0] == "-") {
                     display.innerText = display.innerText.slice(1);
                     num1 = display.innerText;
@@ -144,18 +155,18 @@ const displayOperator = (e,id) => {
                     num1 = display.innerText;
                 }
             }
-            
+            else if (id == "x-squared") {
+                currentOperation = "x-squared";
+                calculations(currentOperation);
+            }
         }
-        if ( id == "backspace" || id == "Backspace") {
-            display.innerText = display.innerText.slice(0,-1);
-            hasOperator ? num2 = num2.slice(0,-1) : num1 = num1.slice(0,-1);
+        if (id == "backspace" || id == "Backspace") {
+            display.innerText = display.innerText.slice(0, -1);
+            hasOperator ? num2 = num2.slice(0, -1) : num1 = num1.slice(0, -1);
             // console.log("n1 "+num1,"n2 "+num2); //   debugging console
 
         }
-        else if (id == "x-squared") {
-            currentOperation = "x-squared";
-            calculations(currentOperation);
-        }
+
         else if (id == "clear") {
             display.innerText = "";
             num1 = "";
@@ -194,7 +205,7 @@ const calculations = (currentOperation) => {
         if (!Number.isInteger(ans)) {       // to check if ans is decimal or int
             display.innerText = ans.toFixed(2);
             num1 = ans.toFixed(2);
-        }else {
+        } else {
             display.innerText = ans;
             num1 = ans.toString();
         }
