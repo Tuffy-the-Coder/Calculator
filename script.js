@@ -61,6 +61,32 @@ document.body.addEventListener("keydown", (e) => {
     }
 })
 
+
+// ribbon-cat effect
+
+const cat = document.getElementById("cat-ribbon");
+let catDefault = true;
+const audio = new Audio();
+audio.src = "cat-ribbon/cat-sfx.mp3";
+
+cat.addEventListener("click", () => {
+    if (audio.paused) {
+        audio.currentTime = 0;
+        audio.play();
+        audio.addEventListener("timeupdate",() => {
+        })        
+    }
+    if (catDefault) {
+        cat.id = "";
+        cat.classList.add("cat-ribbon-new");
+        catDefault = false;
+    } else {
+        cat.id = "cat-ribbon";
+        cat.classList.remove("cat-ribbon-new");
+        catDefault = true;
+    }
+})
+
 // operations part
 
 let num1 = "";

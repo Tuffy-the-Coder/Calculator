@@ -49,7 +49,21 @@ body {
     z-index: 2;
     top: -15%;
     left: 70%;
+    cursor: pointer;
+    transform: rotate(18deg) translateX(0);
+    transition: transform 0.5s ease-in-out;
+}   
+.cat-ribbon-new{
+    height: 150px;
+    width: 150px;
+    position: absolute;
+    z-index: 2;
+    top: -15%;
+    left: 70%;
+    cursor: pointer;
     transform: rotate(18deg);
+    transform: translateX(-300px);
+    transition: all 0.5s ease-in-out;
 }
 .display {
     width: 370px;
