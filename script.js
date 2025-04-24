@@ -92,7 +92,7 @@ cat.addEventListener("click", () => {
 let num1 = "";
 let num2 = "";
 const operations = ["÷", "-", "×", "+", "*", "/", "="];
-const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
+const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0,"."]
 let display = document.querySelector(".display");
 let currentOperation;
 document.querySelectorAll(".digit").forEach((digit) => {
@@ -115,7 +115,7 @@ const displayDigit = (e, digit) => {
     } else {
         let hasOperator = operations.some(op => display.innerText.slice(1).includes(op)); // for placing value on num1 & num2
         if (!hasOperator) {
-            if (digit == ".") {
+            if (digit == "." || e.key == ".") {
                 if (!num1.includes(".")) {  // to avoid dublicate . in num1
                     num1 += digit;
                     display.innerText += digit;
